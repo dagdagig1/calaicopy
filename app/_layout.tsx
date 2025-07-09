@@ -1,61 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
-import { PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import { AuthProvider } from '../src/contexts/AuthContext';
-import { theme } from '../src/theme/theme';
+import { PaperProvider } from 'react-native-paper';
+import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { theme } from '@/theme/theme';
 
 export default function RootLayout() {
+  const isReady = useFrameworkReady();
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <PaperProvider theme={theme}>
       <AuthProvider>
-        <StatusBar style="auto" />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.colors.primary,
-            },
-            headerTintColor: theme.colors.onPrimary,
-            headerTitleStyle: {
-              fontWeight: '600',
-            },
-          }}
-        >
-          <Stack.Screen 
-            name="index" 
-            options={{ 
-              title: 'CalAI',
-              headerShown: false 
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/login" 
-            options={{ 
-              title: 'Sign In',
-              presentation: 'modal'
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/register" 
-            options={{ 
-              title: 'Create Account',
-              presentation: 'modal'
-            }} 
-          />
-          <Stack.Screen 
-            name="profile/setup" 
-            options={{ 
-              title: 'Complete Profile',
-              headerBackVisible: false
-            }} 
-          />
-          <Stack.Screen 
-            name="(tabs)" 
-            options={{ 
-              headerShown: false 
-            }} 
-          />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="auth/login" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="auth/register" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="profile/setup" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="+not-found" />
         </Stack>
+        <StatusBar style="auto" />
       </AuthProvider>
     </PaperProvider>
   );
